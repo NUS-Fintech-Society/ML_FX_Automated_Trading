@@ -10,7 +10,7 @@ import requests
 import json
 import threading
 import telebot
-from Credential import *
+from Credentials import *
 ############################Access MySQL Database#########################
 url = 'https://owuq9doad0.execute-api.ap-southeast-1.amazonaws.com/ShopPal_Telebot_Agent/'
 def query(type, statement):
@@ -87,7 +87,8 @@ def fintech_fx():
 ###########Initialize variables.....###########
 params ={"instruments": currencyConcate(currencyList)}
 rv = requestRate()
+print(rv)
 ##########Here we go!!##############
 print("Success!",flush = True)
-bot.send_message(master, "Launched")
+bot.send_message(chat_id, "Launched")
 #fintech_fx()
