@@ -16,7 +16,7 @@ def get_data():
   values = [float(ele.getText()) for ele in data]
 
   # format into wanted data structure
-  keys = ["five_years", "seven_years", "ten_years", "twenty_years", "thirty_years"]
+  keys = ["five_years_us_daily_treasury_rycr", "seven_years_us_daily_treasury_rycr", "ten_years_us_daily_treasury_rycr", "twenty_years_us_daily_treasury_rycr", "thirty_years_us_daily_treasury_rycr"]
   result = dict(zip(keys, values))
   return result
 
