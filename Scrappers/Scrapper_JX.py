@@ -2,6 +2,9 @@ import oandapyV20
 from oandapyV20 import API
 import oandapyV20.endpoints.pricing as pricing
 import json
+import requests
+
+url = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech_data_pipe'
 
 api = API(access_token= "6d3f41bece536ad3f426dce6b221a936-d0dc087ffefd07412308ec16e169b685")
 accountID = "101-003-9162148-001"
@@ -23,7 +26,7 @@ time_XAU_JPY = []
 
 def XAU_JPY_GBP_BCO():
     params_XAU_JPY = {
-              "instruments": "XAU_JPY"
+              "instruments": {"XAU_JPY"}
             }
 
     r_XAU_JPY = pricing.PricingStream(accountID=accountID, params=params_XAU_JPY)
@@ -35,6 +38,7 @@ def XAU_JPY_GBP_BCO():
             close_ask_XAU_JPY.append(ticks['closeoutAsk'])
         else:
             break
+        '''
 
     params_GBP_JPY = {
               "instruments": "GBP_JPY"
@@ -49,7 +53,7 @@ def XAU_JPY_GBP_BCO():
             close_ask_GBP_JPY.append(ticks['closeoutAsk'])
         else:
             break
-
+    '''
 
     params_BCO_GBP = {
               "instruments": "BCO_GBP"
@@ -64,8 +68,8 @@ def XAU_JPY_GBP_BCO():
             close_ask_BCO_GBP.append(ticks['closeoutAsk'])
         else:
             break
-    print(close_bid_BCO_GBP)
-    print(close_bid_XAU_JPY)
-    print(close_ask_GBP_JPY)
-    return 
+    body = {"values":{"XAU_JPY" : float(close_bid_XAU_JPY[0]), "BCO_GBP":float(close_bid_BCO_GBP[0])}}
+    resp = requests.post(url, json = body)
+    print(body)
+    print(resp.text)
 XAU_JPY_GBP_BCO()

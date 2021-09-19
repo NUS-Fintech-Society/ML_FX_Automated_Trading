@@ -89,7 +89,6 @@ def fintech_fx():
             createBuyOrder(signal.instru, signal.unit, signal.tp, signal.sl)
         if signal.unit < 0:
             createSellOrder(signal.instru, signal.unit, signal.tp, signal.sl)
-    threading.Timer(timeInterval,forextimer).start()
 
 ###########Initialize variables.....###########
 params ={"instruments": currencyConcate(currencyList)}
@@ -99,3 +98,9 @@ print(rv)
 print("Success!",flush = True)
 bot.send_message(chat_id, "Launched")
 #fintech_fx()
+
+while True:
+    try:
+        fintech_fx()
+    
+    

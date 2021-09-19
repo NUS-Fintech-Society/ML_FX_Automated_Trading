@@ -16,7 +16,7 @@ def get_data():
   values = [float(ele.getText()) for ele in data]
 
   # format into wanted data structure
-  keys = ["5years", "7years", "10years", "20years", "30years"]
+  keys = ["five_years_us_treasury_rycr", "seven_years_us_treasury_rycr", "ten_years_us_treasury_rycr", "twenty_us_treasury_rycr", "thirty_years_us_treasury_rycr"]
   result = dict(zip(keys, values))
   return result
 
@@ -26,3 +26,5 @@ def scrapper_template():
     }
     resp = requests.post(url, json = body)
     print(resp.text)
+
+scrapper_template()
