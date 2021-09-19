@@ -9,7 +9,7 @@ import requests
 import datetime
 from oandapyV20 import API
 import oandapyV20.endpoints.pricing as pricing
-from constants_hp import POSITIVE_CORRELATION, YAHOO_OPTION, YAHOO_STOCK, EPOCH_WEEK, VOLAFY_URL, IVR_LST
+from constants_hp import POSITIVE_CORRELATION, YAHOO_OPTION, YAHOO_STOCK, EPOCH_WEEK, VOLAFY_URL, IVR_LST, ACCOUNT_ID
 
 
 url = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech_data_pipe'
@@ -125,5 +125,5 @@ def scrape_main():
 
     resp = requests.post(url, json = body)
 
-# positive_correlation_query_oanda()
-# scrape_main()
+#positive_correlation_query_oanda()
+scrape_main()
