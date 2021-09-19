@@ -11,5 +11,6 @@ def scrapper_template():
 
 def scrap_data():
     ##Scrapping function
-    return {"values": {"interest_cn":0.02, "interest_aus":0.03}} ##example output format
+    return {"values": {"5interest_cn":0.05, "interest_aus":0.03}} ##example output format
 
+scrapper_template()
