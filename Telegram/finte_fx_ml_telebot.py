@@ -40,7 +40,7 @@ def button(call):
 @bot.message_handler(commands = ['start'])
 def start(msg):
     chat_id = str(msg.chat.id)
-    bot.send_message(chat_id, "Hello! Your chat ID is " + str(chat_id))
+    #bot.send_message(chat_id, "Hello! Your chat ID is " + str(chat_id))
     if chat_id in chat_ids:
         keyboardCompiler(chat_id, main_keyboard(), "Welcome!")
     else:
