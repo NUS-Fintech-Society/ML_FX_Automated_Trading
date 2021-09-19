@@ -24,7 +24,7 @@ close_bid_XAU_JPY = []
 close_ask_XAU_JPY = []
 time_XAU_JPY = []
 
-def XAU_JPY_GBP_BCO():
+def scrapper_jx():
     params_XAU_JPY = {
               "instruments": {"XAU_JPY"}
             }
@@ -70,6 +70,4 @@ def XAU_JPY_GBP_BCO():
             break
     body = {"values":{"XAU_JPY" : float(close_bid_XAU_JPY[0]), "BCO_GBP":float(close_bid_BCO_GBP[0])}}
     resp = requests.post(url, json = body)
-    print(body)
     print(resp.text)
-XAU_JPY_GBP_BCO()

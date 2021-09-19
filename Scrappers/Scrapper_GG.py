@@ -20,11 +20,9 @@ def get_data():
   result = dict(zip(keys, values))
   return result
 
-def scrapper_template():
+def scrapper_gg():
     body = {
       "values": get_data()
     }
     resp = requests.post(url, json = body)
     print(resp.text)
-
-scrapper_template()

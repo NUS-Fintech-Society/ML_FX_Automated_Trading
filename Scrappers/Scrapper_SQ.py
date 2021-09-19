@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 url = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech_data_pipe'
 
-def scrapper_BrentCrudeOil_sq():
+def scrapper_sq():
     #get the website for 10 year daily brent crude oil prices
     oil_web = requests.get("https://www.macrotrends.net/2480/brent-crude-oil-prices-10-year-daily-chart")
     soup = BeautifulSoup(oil_web.text, "html.parser")
@@ -28,4 +28,3 @@ def scrapper_BrentCrudeOil_sq():
     resp = requests.post(url, json = body)
     print(resp.text)
 
-scrapper_BrentCrudeOil_sq()

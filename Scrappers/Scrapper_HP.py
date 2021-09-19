@@ -110,7 +110,7 @@ def get_ivr_equity_query_volafy():
     return body
 
 # main function calling helper functions to scrape from the various sources
-def scrape_main():
+def scrapper_hp():
     body = {}
     value = {}
 
@@ -122,4 +122,4 @@ def scrape_main():
     print(resp.text)
 
 #positive_correlation_query_oanda()
-scrape_main()
+#scrape_main()

@@ -1,6 +1,7 @@
-from scrapper_template import *
-from XAU_JPY_GBP_BCO import *
-from scrapper_template_gg import *
+from Scrapper_GG import scrapper_gg
+from Scrapper_HP import scrapper_hp
+from Scrapper_JX import scrapper_jx
+from Scrapper_SQ import scrapper_sq
 import time
 import schedule
 
@@ -12,9 +13,10 @@ def scrapper_scheduler():
     ##    time.sleep(1)
 
 def processes():
-    scrapper_template()
-    scrapper_template_gg()
-    
+    scrapper_sq()
+    scrapper_jx()
+    scrapper_hp()
+    scrapper_gg()
     ##Add scrapper methods from here onwards
 
 scrapper_scheduler()
