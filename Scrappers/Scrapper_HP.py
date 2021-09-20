@@ -119,7 +119,6 @@ def scrapper_hp():
  
     body["values"] = value
     resp = requests.post(url, json = body)
-    print(body)
     print(resp.text)
 
 #positive_correlation_query_oanda()
