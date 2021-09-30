@@ -3,11 +3,12 @@ from oandapyV20 import API
 import oandapyV20.endpoints.pricing as pricing
 import json
 import requests
+from Credentials import *
 
 url = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech_data_pipe'
 
-api = API(access_token= "6d3f41bece536ad3f426dce6b221a936-d0dc087ffefd07412308ec16e169b685")
-accountID = "101-003-9162148-001"
+api = API(access_token= oanda_token)
+accountID = oanda_acc_id
 
 # GBP_JPY pair
 close_bid_GBP_JPY = []
@@ -70,4 +71,3 @@ def scrapper_jx():
             break
     body = {"values":{"XAU_JPY" : float(close_bid_XAU_JPY[0]), "BCO_GBP":float(close_bid_BCO_GBP[0])}}
     resp = requests.post(url, json = body)
-    print(resp.text)

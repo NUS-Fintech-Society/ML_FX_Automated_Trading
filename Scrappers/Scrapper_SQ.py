@@ -26,5 +26,4 @@ def scrapper_sq():
         "values": result
     }
     resp = requests.post(url, json = body)
-    print(resp.text)
 

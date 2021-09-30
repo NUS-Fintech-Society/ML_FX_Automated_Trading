@@ -3,8 +3,20 @@ from Scrapper_HP import scrapper_hp
 from Scrapper_JX import scrapper_jx
 from Scrapper_SQ import scrapper_sq
 import time
+import datetime
 import schedule
 import requests
+import logging
+from telebot import types
+import telebot
+from Credentials import * 
+bot = telebot.TeleBot(token)
+
+logger = logging.getLogger()
+logging.basicConfig(filename="logs/"+datetime.datetime.now().strftime("%Y%m%d%H%M%S")+".log",
+                    format='%(asctime)s %(message)s',
+                    filemode='w',
+                    level=logging.DEBUG)
 
 def scrapper_scheduler():
     schedule.every(20).minutes.do(processes)
@@ -17,16 +29,20 @@ def DTF():
       "signal": 0
     }
     resp = requests.post("https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/dtl", json = body)
-    print(resp.text)
     
 def processes():
-    scrapper_sq()
-    scrapper_jx()
-    scrapper_hp()
-    scrapper_gg()
-    DTF()
+    try:
+        scrapper_sq()
+        scrapper_jx()
+        scrapper_hp()
+        scrapper_gg()
+        DTF()
+        logger.info("Scrapped successfully at " + datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+    except Exception as e:
+        logging.debug("Scrapping failed at " + datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ", with message\n" + str(e))
+        bot.send_message("497602206", "Scrapper has encountered an error: " + str(e))
     ##Add scrapper methods from here onwards
 
-scrapper_scheduler()
 #processes()
 #DTF()
+scrapper_scheduler()
