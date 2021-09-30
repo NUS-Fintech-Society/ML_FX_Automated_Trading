@@ -1,0 +1,2 @@
+2021-09-30 18:03:43,498 Starting new HTTPS connection (1): api.telegram.org:443
+2021-09-30 18:03:44,477 https://api.telegram.org:443 "POST /bot2040623345:AAHDWmlRCfxvYkelAqh2VikLlEHSEMuYSvc/sendMessage?chat_id=497602206&text=Scrappers+launched HTTP/1.1" 200 271

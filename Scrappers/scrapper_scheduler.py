@@ -45,4 +45,5 @@ def processes():
 
 #processes()
 #DTF()
+bot.send_message("497602206", "Scrappers launched")
 scrapper_scheduler()
