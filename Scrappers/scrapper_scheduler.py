@@ -19,7 +19,7 @@ logging.basicConfig(filename="logs/"+datetime.datetime.now().strftime("%Y%m%d%H%
                     level=logging.DEBUG)
 
 def scrapper_scheduler():
-    schedule.every(20).minutes.do(processes)
+    schedule.every(5).minutes.do(processes)
     while True:
         schedule.run_pending()
         time.sleep(1)
@@ -40,7 +40,10 @@ def processes():
         logger.info("Scrapped successfully at " + datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
     except Exception as e:
         logging.debug("Scrapping failed at " + datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ", with message\n" + str(e))
-        bot.send_message("497602206", "Scrapper has encountered an error: " + str(e))
+        try:
+            bot.send_message("497602206", "Scrapper has encountered an error: " + str(e))
+        except:
+            print("Unable to send telebot message")
     ##Add scrapper methods from here onwards
 
 #processes()
