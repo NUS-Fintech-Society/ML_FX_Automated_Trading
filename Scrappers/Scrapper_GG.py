@@ -10,7 +10,7 @@ def get_data():
   soup = bs4.BeautifulSoup(web.text, "lxml")
 
   # locate and process data
-  last_row = soup.select(".evenrow")[-1]
+  last_row = soup.select(".t-chart")[-1].select("tr")[-1]
   data = last_row.select('td')
   data.pop(0)
   values = [float(ele.getText()) for ele in data]
