@@ -29,22 +29,39 @@ def DTF():
       "signal": 0
     }
     resp = requests.post("https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/dtl", json = body)
-    
+
+def error_notifier(chat_id, name, e):
+    try:
+        bot.send_message(chat_id, name + "Scrapper has encountered an error: " + str(e))
+    except:
+        print("Unable to send telebot message")
+        
 def processes():
     try:
         scrapper_sq()
-        scrapper_jx()
-        scrapper_hp()
-        scrapper_gg()
-        DTF()
-        logger.info("Scrapped successfully at " + datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
     except Exception as e:
+        error_notifier("497602206", "SQ", e)
         logging.debug("Scrapping failed at " + datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ", with message\n" + str(e))
-        try:
-            bot.send_message("497602206", "Scrapper has encountered an error: " + str(e))
-        except:
-            print("Unable to send telebot message")
-    ##Add scrapper methods from here onwards
+        
+    try:
+        scrapper_jx()
+    except Exception as e:
+        error_notifier("497602206", "JX", e)
+        logging.debug("Scrapping failed at " + datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ", with message\n" + str(e))
+        
+    try:
+        scrapper_hp()
+    except Exception as e:
+        error_notifier("497602206", "HP", e)
+        logging.debug("Scrapping failed at " + datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ", with message\n" + str(e))
+        
+    try:
+        scrapper_gg()
+    except Exception as e:
+        error_notifier("497602206", "GG", e)
+        logging.debug("Scrapping failed at " + datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ", with message\n" + str(e))
+        
+    DTF()
 
 #processes()
 #DTF()

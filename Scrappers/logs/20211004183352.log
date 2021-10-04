@@ -1,0 +1,33 @@
+2021-10-04 18:33:52,481 Starting new HTTPS connection (1): api.telegram.org:443
+2021-10-04 18:33:53,342 https://api.telegram.org:443 "POST /bot2040623345:AAHDWmlRCfxvYkelAqh2VikLlEHSEMuYSvc/sendMessage?chat_id=497602206&text=Scrappers+launched HTTP/1.1" 200 272
+2021-10-04 18:33:58,375 Running job Job(interval=5, unit=seconds, do=processes, args=(), kwargs={})
+2021-10-04 18:33:58,381 Starting new HTTPS connection (1): www.macrotrends.net:443
+2021-10-04 18:33:58,729 https://www.macrotrends.net:443 "GET /2480/brent-crude-oil-prices-10-year-daily-chart HTTP/1.1" 200 12277
+2021-10-04 18:33:58,778 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-10-04 18:33:59,489 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-10-04 18:33:59,515 performing request https://stream-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing/stream
+2021-10-04 18:33:59,522 Starting new HTTPS connection (1): stream-fxpractice.oanda.com:443
+2021-10-04 18:34:00,621 https://stream-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing/stream?instruments=XAU_JPY HTTP/1.1" 200 None
+2021-10-04 18:34:05,869 performing request https://stream-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing/stream
+2021-10-04 18:34:05,875 Starting new HTTPS connection (2): stream-fxpractice.oanda.com:443
+2021-10-04 18:34:06,990 https://stream-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing/stream?instruments=BCO_GBP HTTP/1.1" 200 None
+2021-10-04 18:34:12,030 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-10-04 18:34:12,303 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-10-04 18:34:12,326 performing request https://api-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing
+2021-10-04 18:34:12,332 Starting new HTTPS connection (1): api-fxpractice.oanda.com:443
+2021-10-04 18:34:12,666 https://api-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing?instruments=GBP_JPY%2CAUD_USD%2CNZD_USD HTTP/1.1" 200 392
+2021-10-04 18:34:13,283 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-10-04 18:34:13,723 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-10-04 18:34:13,808 Starting new HTTPS connection (1): www.treasury.gov:443
+2021-10-04 18:34:13,931 https://www.treasury.gov:443 "GET /resource-center/data-chart-center/interest-rates/Pages/TextView.aspx?data=realyield HTTP/1.1" 200 52767
+2021-10-04 18:34:13,991 Scrapping failed at 20211004183413, with message
+list index out of range
+2021-10-04 18:34:14,390 https://api.telegram.org:443 "POST /bot2040623345:AAHDWmlRCfxvYkelAqh2VikLlEHSEMuYSvc/sendMessage?chat_id=497602206&text=Scrapper+has+encountered+an+error%3A+list+index+out+of+range HTTP/1.1" 200 312
+2021-10-04 18:34:19,430 Running job Job(interval=5, unit=seconds, do=processes, args=(), kwargs={})
+2021-10-04 18:34:19,435 Starting new HTTPS connection (1): www.macrotrends.net:443
+2021-10-04 18:34:19,491 https://www.macrotrends.net:443 "GET /2480/brent-crude-oil-prices-10-year-daily-chart HTTP/1.1" 200 12277
+2021-10-04 18:34:19,537 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-10-04 18:34:19,991 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-10-04 18:34:20,050 performing request https://stream-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing/stream
+2021-10-04 18:34:20,052 Resetting dropped connection: stream-fxpractice.oanda.com
+2021-10-04 18:34:21,122 https://stream-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing/stream?instruments=XAU_JPY HTTP/1.1" 200 None

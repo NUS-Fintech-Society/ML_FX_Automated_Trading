@@ -9,7 +9,7 @@ def get_data():
   web = requests.get("https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Pages/TextView.aspx?data=realyield")
   soup = bs4.BeautifulSoup(web.text, "lxml")
 
-  # locate and process data 
+  # locate and process data
   last_row = soup.select(".evenrow")[-1]
   data = last_row.select('td')
   data.pop(0)
