@@ -11,6 +11,7 @@ import json
 import threading
 import telebot
 from Credentials import *
+from ml_model import *
 ############################Access MySQL Database#########################
 url = 'https://owuq9doad0.execute-api.ap-southeast-1.amazonaws.com/ShopPal_Telebot_Agent/'
 def query(type, statement):
@@ -82,7 +83,12 @@ def createSellOrder(instru, unit, tp, sl): ##Creating a sell(or short) order
 
 def fintech_fx():
     ##Method body
-    threading.Timer(timeInterval,forextimer).start()
+    signal = createSignal()
+    if signal.execute:
+        if signal.unit > 0:
+            createBuyOrder(signal.instru, signal.unit, signal.tp, signal.sl)
+        if signal.unit < 0:
+            createSellOrder(signal.instru, signal.unit, signal.tp, signal.sl)
 
 ###########Initialize variables.....###########
 params ={"instruments": currencyConcate(currencyList)}
@@ -92,3 +98,9 @@ print(rv)
 print("Success!",flush = True)
 bot.send_message(chat_id, "Launched")
 #fintech_fx()
+
+while True:
+    try:
+        fintech_fx()
+    
+    

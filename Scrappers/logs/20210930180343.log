@@ -1,0 +1,74 @@
+2021-09-30 18:03:43,498 Starting new HTTPS connection (1): api.telegram.org:443
+2021-09-30 18:03:44,477 https://api.telegram.org:443 "POST /bot2040623345:AAHDWmlRCfxvYkelAqh2VikLlEHSEMuYSvc/sendMessage?chat_id=497602206&text=Scrappers+launched HTTP/1.1" 200 271
+2021-09-30 18:23:45,340 Running job Job(interval=20, unit=minutes, do=processes, args=(), kwargs={})
+2021-09-30 18:23:45,342 Starting new HTTPS connection (1): www.macrotrends.net:443
+2021-09-30 18:23:45,376 https://www.macrotrends.net:443 "GET /2480/brent-crude-oil-prices-10-year-daily-chart HTTP/1.1" 200 12278
+2021-09-30 18:23:45,417 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-09-30 18:23:46,592 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-09-30 18:23:46,595 performing request https://stream-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing/stream
+2021-09-30 18:23:46,597 Starting new HTTPS connection (1): stream-fxpractice.oanda.com:443
+2021-09-30 18:23:47,600 https://stream-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing/stream?instruments=XAU_JPY HTTP/1.1" 200 None
+2021-09-30 18:23:52,751 performing request https://stream-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing/stream
+2021-09-30 18:23:52,753 Starting new HTTPS connection (2): stream-fxpractice.oanda.com:443
+2021-09-30 18:23:53,696 https://stream-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing/stream?instruments=BCO_GBP HTTP/1.1" 200 None
+2021-09-30 18:23:58,754 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-09-30 18:23:58,972 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-09-30 18:23:58,975 performing request https://api-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing
+2021-09-30 18:23:58,977 Starting new HTTPS connection (1): api-fxpractice.oanda.com:443
+2021-09-30 18:23:59,246 https://api-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing?instruments=GBP_JPY%2CAUD_USD%2CNZD_USD HTTP/1.1" 200 383
+2021-09-30 18:24:02,542 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-09-30 18:24:03,032 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-09-30 18:24:03,036 Starting new HTTPS connection (1): www.treasury.gov:443
+2021-09-30 18:24:03,600 https://www.treasury.gov:443 "GET /resource-center/data-chart-center/interest-rates/Pages/TextView.aspx?data=realyield HTTP/1.1" 200 54929
+2021-09-30 18:24:03,608 Scrapping failed at 20210930182403, with message
+Couldn't find a tree builder with the features you requested: lxml. Do you need to install a parser library?
+2021-09-30 18:24:03,612 Starting new HTTPS connection (1): api.telegram.org:443
+2021-09-30 18:24:04,597 https://api.telegram.org:443 "POST /bot2040623345:AAHDWmlRCfxvYkelAqh2VikLlEHSEMuYSvc/sendMessage?chat_id=497602206&text=Scrapper+has+encountered+an+error%3A+Couldn%27t+find+a+tree+builder+with+the+features+you+requested%3A+lxml.+Do+you+need+to+install+a+parser+library%3F HTTP/1.1" 200 396
+2021-09-30 18:44:05,024 Running job Job(interval=20, unit=minutes, do=processes, args=(), kwargs={})
+2021-09-30 18:44:05,026 Starting new HTTPS connection (1): www.macrotrends.net:443
+2021-09-30 18:44:05,058 https://www.macrotrends.net:443 "GET /2480/brent-crude-oil-prices-10-year-daily-chart HTTP/1.1" 200 12278
+2021-09-30 18:44:05,089 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-09-30 18:44:05,581 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-09-30 18:44:05,583 performing request https://stream-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing/stream
+2021-09-30 18:44:05,584 Resetting dropped connection: stream-fxpractice.oanda.com
+2021-09-30 18:44:06,553 https://stream-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing/stream?instruments=XAU_JPY HTTP/1.1" 200 None
+2021-09-30 18:44:11,799 performing request https://stream-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing/stream
+2021-09-30 18:44:11,801 Resetting dropped connection: stream-fxpractice.oanda.com
+2021-09-30 18:44:12,754 https://stream-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing/stream?instruments=BCO_GBP HTTP/1.1" 200 None
+2021-09-30 18:44:17,906 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-09-30 18:44:18,163 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-09-30 18:44:18,166 performing request https://api-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing
+2021-09-30 18:44:18,168 Resetting dropped connection: api-fxpractice.oanda.com
+2021-09-30 18:44:18,454 https://api-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing?instruments=GBP_JPY%2CAUD_USD%2CNZD_USD HTTP/1.1" 200 382
+2021-09-30 18:44:18,882 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-09-30 18:44:19,303 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-09-30 18:44:19,307 Starting new HTTPS connection (1): www.treasury.gov:443
+2021-09-30 18:44:21,488 https://www.treasury.gov:443 "GET /resource-center/data-chart-center/interest-rates/Pages/TextView.aspx?data=realyield HTTP/1.1" 200 53990
+2021-09-30 18:44:21,690 Scrapping failed at 20210930184421, with message
+Couldn't find a tree builder with the features you requested: lxml. Do you need to install a parser library?
+2021-09-30 18:44:21,694 Starting new HTTPS connection (1): api.telegram.org:443
+2021-09-30 18:44:22,660 https://api.telegram.org:443 "POST /bot2040623345:AAHDWmlRCfxvYkelAqh2VikLlEHSEMuYSvc/sendMessage?chat_id=497602206&text=Scrapper+has+encountered+an+error%3A+Couldn%27t+find+a+tree+builder+with+the+features+you+requested%3A+lxml.+Do+you+need+to+install+a+parser+library%3F HTTP/1.1" 200 396
+2021-09-30 19:04:23,084 Running job Job(interval=20, unit=minutes, do=processes, args=(), kwargs={})
+2021-09-30 19:04:23,086 Starting new HTTPS connection (1): www.macrotrends.net:443
+2021-09-30 19:04:23,115 https://www.macrotrends.net:443 "GET /2480/brent-crude-oil-prices-10-year-daily-chart HTTP/1.1" 200 12278
+2021-09-30 19:04:23,145 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-09-30 19:04:23,544 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-09-30 19:04:23,546 performing request https://stream-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing/stream
+2021-09-30 19:04:23,547 Resetting dropped connection: stream-fxpractice.oanda.com
+2021-09-30 19:04:24,477 https://stream-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing/stream?instruments=XAU_JPY HTTP/1.1" 200 None
+2021-09-30 19:04:29,723 performing request https://stream-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing/stream
+2021-09-30 19:04:29,724 Resetting dropped connection: stream-fxpractice.oanda.com
+2021-09-30 19:04:30,661 https://stream-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing/stream?instruments=BCO_GBP HTTP/1.1" 200 None
+2021-09-30 19:04:35,855 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-09-30 19:04:36,059 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-09-30 19:04:36,061 performing request https://api-fxpractice.oanda.com/v3/accounts/101-003-9162148-001/pricing
+2021-09-30 19:04:36,063 Resetting dropped connection: api-fxpractice.oanda.com
+2021-09-30 19:04:36,329 https://api-fxpractice.oanda.com:443 "GET /v3/accounts/101-003-9162148-001/pricing?instruments=GBP_JPY%2CAUD_USD%2CNZD_USD HTTP/1.1" 200 389
+2021-09-30 19:04:36,464 Starting new HTTPS connection (1): e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443
+2021-09-30 19:04:36,866 https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com:443 "POST /Fintech/fintech_data_pipe HTTP/1.1" 200 40
+2021-09-30 19:04:36,870 Starting new HTTPS connection (1): www.treasury.gov:443
+2021-09-30 19:04:37,226 https://www.treasury.gov:443 "GET /resource-center/data-chart-center/interest-rates/Pages/TextView.aspx?data=realyield HTTP/1.1" 200 54881
+2021-09-30 19:04:37,231 Scrapping failed at 20210930190437, with message
+Couldn't find a tree builder with the features you requested: lxml. Do you need to install a parser library?
+2021-09-30 19:04:37,234 Starting new HTTPS connection (1): api.telegram.org:443
+2021-09-30 19:04:38,186 https://api.telegram.org:443 "POST /bot2040623345:AAHDWmlRCfxvYkelAqh2VikLlEHSEMuYSvc/sendMessage?chat_id=497602206&text=Scrapper+has+encountered+an+error%3A+Couldn%27t+find+a+tree+builder+with+the+features+you+requested%3A+lxml.+Do+you+need+to+install+a+parser+library%3F HTTP/1.1" 200 396
