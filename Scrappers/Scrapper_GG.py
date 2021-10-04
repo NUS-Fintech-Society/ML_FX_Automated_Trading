@@ -25,5 +25,3 @@ def scrapper_gg():
       "values": get_data()
     }
     resp = requests.post(url, json = body)
-
-scrapper_gg()
