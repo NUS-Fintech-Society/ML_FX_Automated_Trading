@@ -19,7 +19,7 @@ logging.basicConfig(filename="logs/"+datetime.datetime.now().strftime("%Y%m%d%H%
                     level=logging.DEBUG)
 
 def scrapper_scheduler():
-    schedule.every(5).minutes.do(processes)
+    schedule.every(20).seconds.do(processes)
     while True:
         schedule.run_pending()
         time.sleep(1)
