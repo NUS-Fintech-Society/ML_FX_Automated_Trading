@@ -8,32 +8,31 @@ import datetime
 import time
 import requests
 import json
-import threading
+from threading import Thread
 import telebot
 from Credentials import *
-from ml_model import *
+from RandomForest import *
+from AdaBoost import *
+import schedule
+
 ############################Access MySQL Database#########################
-url = 'https://owuq9doad0.execute-api.ap-southeast-1.amazonaws.com/ShopPal_Telebot_Agent/'
+MYSQL_CONNECTOR_URL = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech'
+
 def query(type, statement):
     #print(statement, flush = True)
-    param = {"statusCode": 200,\
-    "Body":{\
-    "type" : type,\
-    "statement" : statement}}
-    if(type == "select"):
-        x = requests.post(url, data = json.dumps(param))
-        statusCode = x.status_code
-        if(str(statusCode) != '200'):
-            print(x.text)
-            return False
-        lst = json.loads(x.text)["body"]
-        lst = json.loads(lst)
-        return lst
-    if(type == "other"):
-        y = requests.post(url, data = json.dumps(param))
-        statusCode = y.status_code
-        if(str(statusCode) != '200'):
-            return "False"
+    payload = {
+      'statement': statement,
+      'type': type
+      }
+    if(type == "query"):
+        response = requests.post(MYSQL_CONNECTOR_URL, data=json.dumps(payload))
+        print(response.text)
+        return None
+        data = json.loads(response.json()['body'])
+        json_data = data['result']
+        return json_data
+    if(type == "update"):
+        response = requests.post(MYSQL_CONNECTOR_URL, data=json.dumps(payload))
         return "True"
     return "False";
 ############################Account Set Up################################
@@ -42,17 +41,34 @@ token=oanda_token
 api=API(access_token=token,environment="practice")
 chat_id = tele_chat_id
 bot = telebot.TeleBot(bot_token)
-currencyList =  ['GBP/JPY']
-pipRatio = 0.01
+currencyList =  ['GBP_JPY']
 ###########################End of set up##################################
-def getCurrencyValue(rv): ##Return the price of currency(as average of bid and ask)
-    return round((getAskPrice(rv) + getBidPrice(rv))/2,3)
 
-def getAskPrice(rv): ##Get ask price
-    return float((((rv["prices"][0])["asks"])[0])["price"])
+##############################Parameters################################
+currency_diff_threshold = 2 ##unit is pips
+accuracy_threshold = 0.9
+probability_threshold = 0.9
+purchase_units = 2000
+interval = 20 #in seconds
+#############################End of parameters#########################
+##Note that the code in this file was written for multiple currency pairs as target. However, our ML model only use GBPJPY as target. 
+def get_pip_ratio(currency):
+    if "JPY" in str(currency):
+        return 0.01
+    else:
+        return 0.0001
+    
+def getCurrencyValue(rv, currencyIndex):
+    if get_pip_ratio(currencyList[currencyIndex]) == 0.01:
+        return round((float((((rv["prices"][currencyIndex])["asks"])[0])["price"]) + float((((rv["prices"][currencyIndex])["bids"])[0])["price"]))/2,3)
+    else:
+        return round((float((((rv["prices"][currencyIndex])["asks"])[0])["price"]) + float((((rv["prices"][currencyIndex])["bids"])[0])["price"]))/2,5)
 
-def getBidPrice(rv):  ##Get bid price
-    return float((((rv["prices"][0])["bids"])[0])["price"])
+def getAskPrice(rv, currencyIndex):
+    return float((((rv["prices"][currencyIndex])["asks"])[0])["price"])
+
+def getBidPrice(rv, currencyIndex):
+    return float((((rv["prices"][currencyIndex])["bids"])[0])["price"])
 
 def requestRate():  ##Request parameters from Oanda
     r = pricing.PricingInfo(accountID=accountID, params=params)
@@ -65,42 +81,95 @@ def currencyConcate(currencies):  ##Concatenate currencies from array to a forma
         param = param + currency + ","
     return param[0:len(param)-1]
     
-def createBuyOrder(instru, unit, tp, sl): ##Creating a buy(or long) order
+def createBuyOrder(instru, unit, tp, sl, model_name,currencyValue): ##Creating a buy(or long) order
     takeProfit = TakeProfitDetails(tp).data
     stopLoss = StopLossDetails(sl).data
     data = MarketOrderRequest(instrument = instru, units = unit,
            takeProfitOnFill = takeProfit, stopLossOnFill = stopLoss).data
     o = order.OrderCreate(accountID, data)
     api.request(o)
+    rsp = o.response
+    upload_order(str(rsp), rsp["orderCreateTransaction"]["id"], instru, unit, 20, 20, currencyValue, model_name)
 
-def createSellOrder(instru, unit, tp, sl): ##Creating a sell(or short) order
+def createSellOrder(instru, unit, tp, sl, model_name,currencyValue): ##Creating a sell(or short) order
     takeProfit = TakeProfitDetails(tp).data
     stopLoss = StopLossDetails(sl).data
     data = MarketOrderRequest(instrument = instru, units = -unit,
            takeProfitOnFill = takeProfit, stopLossOnFill = stopLoss).data
     o = order.OrderCreate(accountID, data)
     api.request(o)
+    rsp = o.response
+    upload_order(str(rsp), rsp["orderCreateTransaction"]["id"], instru, unit, 20, 20, currencyValue, model_name)
 
+def upload_order(raw, oanda_order_id, instrument, units, take_profit, stop_loss, currency_value, model_name):
+    print("inserting trade")
+    statement = 'insert into trades (raw, oanda_order_id, instrument, units, take_profit, stop_loss, currency_value,  model_name) values ("%s", "%s", "%s", %s, %s, %s, %s, "%s")'
+    statement = statement % (raw, oanda_order_id, instrument, units, take_profit, stop_loss, currency_value, model_name)
+    
+###################Set up ML Models
+rf = RandomForest()
+ada = AdaBoost()
+def model_trainer():
+    global rf
+    global ada
+    rf = RandomForest()
+    ada = AdaBoost()
+    
+def model_training_scheduler():
+    schedule.every(interval).seconds.do(model_trainer)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+###################End 
+
+##################Running trading algo
 def fintech_fx():
-    ##Method body
-    signal = createSignal()
-    if signal.execute:
-        if signal.unit > 0:
-            createBuyOrder(signal.instru, signal.unit, signal.tp, signal.sl)
-        if signal.unit < 0:
-            createSellOrder(signal.instru, signal.unit, signal.tp, signal.sl)
-
+    rv = requestRate()
+    for i in range(len(currencyList)):
+        currency = currencyList[i]
+        pip_ratio = get_pip_ratio(currency)
+        currencyValue = getCurrencyValue(rv, i)
+        ###Random Forest
+        rf_signal = rf.produce_signal(currencyValue, currency)
+        rf_signal_value_diff = rf_signal[0]
+        rf_prediction = rf_signal[1]
+        rf_prediction_proba = rf_signal[2]
+        model_accuracy = rf.accuracy
+        print(rf_signal)
+        if rf_signal_value_diff/pip_ratio < currency_diff_threshold and rf_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
+            if rf_prediction > 0:
+                ##Execute buy order
+                createBuyOrder(currency, purchase_units, 20, 20, "RandomForest", currencyValue)
+            if rf_prediction < 0:
+                ##Execute sell order
+                createSellOrder(currency, purchase_units, 20, 20, "RandomForest", currencyValue)
+        ###Ada boost
+        ada_signal = ada.produce_signal(currencyValue, currency)
+        ada_signal_value_diff = ada_signal[0]
+        ada_prediction = ada_signal[1]
+        ada_prediction_proba = ada_signal[2]
+        model_accuracy = ada.accuracy
+        print(ada_signal)
+        if ada_signal_value_diff/pip_ratio < currency_diff_threshold and ada_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
+            if ada_prediction > 0:
+                ##Execute buy order
+                createBuyOrder(currency, purchase_units, 20, 20, "AdaBoost", currencyValue)
+            if ada_prediction < 0:
+                ##Execute sell order
+                createSellOrder(currency, purchase_units, 20, 20, "AdaBoost", currencyValue)
+                
+##################End
+    
 ###########Initialize variables.....###########
 params ={"instruments": currencyConcate(currencyList)}
 rv = requestRate()
-print(rv)
 ##########Here we go!!##############
-print("Success!",flush = True)
-bot.send_message(chat_id, "Launched")
-#fintech_fx()
+print("Launch Success!",flush = True)
+#bot.send_message(chat_id, "Launched")
 
+Thread(target = model_training_scheduler).start()  ##Running model training on separate thread
 while True:
-    try:
-        fintech_fx()
+    fintech_fx()
+    time.sleep(interval)
     
     

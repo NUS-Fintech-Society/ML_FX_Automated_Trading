@@ -21,8 +21,10 @@ logging.basicConfig(filename="logs/"+datetime.datetime.now().strftime("%Y%m%d%H%
 def scrapper_scheduler():
     schedule.every(20).seconds.do(processes)
     while True:
-        schedule.run_pending()
-        time.sleep(1)
+        if datetime.datetime.today().weekday() <= 4:
+            print("today is " + str(datetime.datetime.today().weekday()))
+            schedule.run_pending()
+            time.sleep(1)
 
 def DTF():
     body = {
