@@ -22,9 +22,8 @@ def scrapper_scheduler():
     schedule.every(20).seconds.do(processes)
     while True:
         if datetime.datetime.today().weekday() <= 4:
-            print("today is " + str(datetime.datetime.today().weekday()))
             schedule.run_pending()
-            time.sleep(1)
+        time.sleep(1)
 
 def DTF():
     body = {

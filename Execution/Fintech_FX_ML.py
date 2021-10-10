@@ -47,7 +47,7 @@ currencyList =  ['GBP_JPY']
 ##############################Parameters################################
 currency_diff_threshold = 2 ##unit is pips
 accuracy_threshold = 0.9
-probability_threshold = 0.9
+probability_threshold = 0.95
 purchase_units = 2000
 interval = 20 #in seconds
 #############################End of parameters#########################
@@ -118,7 +118,8 @@ def model_trainer():
 def model_training_scheduler():
     schedule.every(interval).seconds.do(model_trainer)
     while True:
-        schedule.run_pending()
+        if datetime.datetime.today().weekday() <= 4:
+            schedule.run_pending()
         time.sleep(1)
 ###################End 
 
@@ -169,7 +170,8 @@ print("Launch Success!",flush = True)
 
 Thread(target = model_training_scheduler).start()  ##Running model training on separate thread
 while True:
-    fintech_fx()
+    if datetime.datetime.today().weekday() <= 4:
+        fintech_fx()
     time.sleep(interval)
     
     
