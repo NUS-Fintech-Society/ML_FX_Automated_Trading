@@ -48,7 +48,7 @@ currencyList =  ['GBP_JPY']
 currency_diff_threshold = 2 ##unit is pips
 accuracy_threshold = 0.93
 probability_threshold = 0.96
-purchase_units = 2000
+purchase_units = 5000
 interval = 20 #in seconds
 #############################End of parameters#########################
 ##Note that the code in this file was written for multiple currency pairs as target. However, our ML model only use GBPJPY as target. 
@@ -81,19 +81,25 @@ def currencyConcate(currencies):  ##Concatenate currencies from array to a forma
         param = param + currency + ","
     return param[0:len(param)-1]
     
-def createBuyOrder(instru, unit, tp, sl, model_name,currencyValue): ##Creating a buy(or long) order
-    takeProfit = TakeProfitDetails(tp).data
-    stopLoss = StopLossDetails(sl).data
+def createBuyOrder(instru, unit, tp, sl, model_name,currencyValue, pip_ratio): ##Creating a buy(or long) order
+    stopLoss = currencyValue - sl * pip_ratio
+    takeProfit = currencyValue + tp * pip_ratio
+    takeProfit = TakeProfitDetails(takeProfit).data
+    stopLoss = StopLossDetails(stopLoss).data
     data = MarketOrderRequest(instrument = instru, units = unit,
            takeProfitOnFill = takeProfit, stopLossOnFill = stopLoss).data
     o = order.OrderCreate(accountID, data)
     api.request(o)
     rsp = o.response
+    print(rsp)
     upload_order(str(rsp), rsp["orderCreateTransaction"]["id"], instru, unit, 20, 20, currencyValue, model_name)
 
-def createSellOrder(instru, unit, tp, sl, model_name,currencyValue): ##Creating a sell(or short) order
-    takeProfit = TakeProfitDetails(tp).data
-    stopLoss = StopLossDetails(sl).data
+
+def createSellOrder(instru, unit, tp, sl, model_name,currencyValue, pip_ratio): ##Creating a sell(or short) order
+    stopLoss = currencyValue + sl * pip_ratio
+    takeProfit = currencyValue - tp * pip_ratio
+    takeProfit = TakeProfitDetails(takeProfit).data
+    stopLoss = StopLossDetails(stopLoss).data
     data = MarketOrderRequest(instrument = instru, units = -unit,
            takeProfitOnFill = takeProfit, stopLossOnFill = stopLoss).data
     o = order.OrderCreate(accountID, data)
@@ -105,6 +111,7 @@ def upload_order(raw, oanda_order_id, instrument, units, take_profit, stop_loss,
     print("inserting trade")
     statement = 'insert into trades (raw, oanda_order_id, instrument, units, take_profit, stop_loss, currency_value,  model_name) values ("%s", "%s", "%s", %s, %s, %s, %s, "%s")'
     statement = statement % (raw, oanda_order_id, instrument, units, take_profit, stop_loss, currency_value, model_name)
+    query("update", statement)
     
 ###################Set up ML Models
 rf = RandomForest()
@@ -140,10 +147,10 @@ def fintech_fx():
         if rf_signal_value_diff/pip_ratio < currency_diff_threshold and rf_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
             if rf_prediction > 0:
                 ##Execute buy order
-                createBuyOrder(currency, purchase_units, 20, 20, "RandomForest", currencyValue)
+                createBuyOrder(currency, purchase_units, 20, 20, "RandomForest_V1", currencyValue, pip_ratio)
             if rf_prediction < 0:
                 ##Execute sell order
-                createSellOrder(currency, purchase_units, 20, 20, "RandomForest", currencyValue)
+                createSellOrder(currency, purchase_units, 20, 20, "RandomForest_V1", currencyValue, pip_ratio)
         ###Ada boost
         ada_signal = ada.produce_signal(currencyValue, currency)
         ada_signal_value_diff = ada_signal[0]
@@ -154,10 +161,10 @@ def fintech_fx():
         if ada_signal_value_diff/pip_ratio < currency_diff_threshold and ada_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
             if ada_prediction > 0:
                 ##Execute buy order
-                createBuyOrder(currency, purchase_units, 20, 20, "AdaBoost", currencyValue)
+                createBuyOrder(currency, purchase_units, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
             if ada_prediction < 0:
                 ##Execute sell order
-                createSellOrder(currency, purchase_units, 20, 20, "AdaBoost", currencyValue)
+                createSellOrder(currency, purchase_units, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
                 
 ##################End
     
