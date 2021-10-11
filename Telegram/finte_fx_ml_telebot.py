@@ -52,5 +52,5 @@ def show_positions(msg):
     searchCustomer(chat_id, keyboardCompiler, bot, customerKeyboardNoHide, agent_contact)
 
 print("OK")
-bot.polling()
+bot.infinity_polling()
 
