@@ -32,12 +32,12 @@ def formatAccountSummary():
     margin_available = rv["account"]["marginAvailable"]
     positionValue = rv["account"]["positionValue"]
     s = '**********************************\n'
-    s = s + "NAV: %s\n$" % (NAV, )
+    s = s + "NAV:         $%s\n" % (NAV, )
     s = s + "Trade Count: %s\n" % (openTradeCount, )
-    s = s + "P/L: %s\n$" % (profit_loss, )
-    s = s + "Margin Used: %s\n$" % (margin_used, )
-    s = s + "Margin Available: %s\n$" % (margin_available, )
-    s = s + "Position Value: %s\n$" % (positionValue, )
+    s = s + "P/L:         $%s\n" % (profit_loss, )
+    s = s + "Margin Used: $%s\n" % (margin_used, )
+    s = s + "Margin Available: $%s\n" % (margin_available, )
+    s = s + "Position Value:   $%s\n" % (positionValue, )
     return s
 
 def formatTrades(rv):
