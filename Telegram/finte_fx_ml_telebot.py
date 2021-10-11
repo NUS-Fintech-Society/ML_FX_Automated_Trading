@@ -14,7 +14,8 @@ chat_ids = ["497602206", "697913165", "459345300", "234788486", "894452777", "96
 def main_keyboard():
     key1 = types.InlineKeyboardButton(text = "View Positions", callback_data = "vpos")
     key2 = types.InlineKeyboardButton(text = "View Summary", callback_data = "vsum")
-    return (key1, key2)
+    key3 = types.InlineKeyboardButton(text = "View Past 10 Trades", callback_data = "vtentrades")
+    return (key1, key2, key3)
 
 def keyboardCompiler(chat_id, keys, message):
     keyboard = types.InlineKeyboardMarkup()
@@ -31,10 +32,18 @@ def button(call):
     time = str(datetime.datetime.now())
     print("[" + time + "]: Query by " + chat_id, flush = True) ##getVisitorName(chat_id) locates in help_functions
     if query == "vpos":
-        bot.send_message(chat_id, "There are no orders")
+        t = formatAccountSummary()
+        bot.send_message(chat_id, t)
     if query == "vsum":
         t = formatAccountSummary()
-        bot.send_message(chat_id, formatAccountSummary())
+        bot.send_message(chat_id, t)
+    if query == "vtentrades":
+        t = requestTrades()
+        if not t:
+            bot.send_message(chat_id, "No trades at the moment")
+        else:
+            bot.send_message(chat_id, t)
+    bot.answer_callback_query(str(call.id))
 
 
 @bot.message_handler(commands = ['start'])
@@ -42,7 +51,7 @@ def start(msg):
     chat_id = str(msg.chat.id)
     #bot.send_message(chat_id, "Hello! Your chat ID is " + str(chat_id))
     if chat_id in chat_ids:
-        keyboardCompiler(chat_id, main_keyboard(), "Welcome!")
+        keyboardCompiler(chat_id, main_keyboard(), "Welcome! This bot allows you to see the current trades and positions")
     else:
         bot.send_message(chat_id, "You are denied access")
     
