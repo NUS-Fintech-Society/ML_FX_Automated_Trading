@@ -72,7 +72,7 @@ class AdaBoost:
         return json_data
 
     def start_training(self):
-        df = self.fetch('SELECT * FROM dataframe where dayofweek(timestamp) <= 5 limit 3000')
+        df = self.fetch('select * from (SELECT * FROM dataframe where dayofweek(timestamp) <= 5 order by timestamp desc limit 3000) as a order by a.timestamp')
         df = df[df["GBP_JPY_Labels"] != 0]
         df['GBP_JPY_Labels'] = df['GBP_JPY_Labels'].map({20.0:1,-20.0:-1,0.0:0})
         x_df = df.drop(['GBP_JPY_Labels', 'timestamp', 'item_index'], axis=1)

@@ -46,8 +46,8 @@ currencyList =  ['GBP_JPY']
 
 ##############################Parameters################################
 currency_diff_threshold = 2 ##unit is pips
-accuracy_threshold = 0.93
-probability_threshold = 0.96
+accuracy_threshold = 0.90
+probability_threshold = 0.90
 purchase_units = 5000
 interval = 20 #in seconds
 #############################End of parameters#########################
@@ -172,13 +172,13 @@ def fintech_fx():
 params ={"instruments": currencyConcate(currencyList)}
 rv = requestRate()
 ##########Here we go!!##############
-print("Launch Success!",flush = True)
+print("Launch Success!")
 #bot.send_message(chat_id, "Launched")
 
 Thread(target = model_training_scheduler).start()  ##Running model training on separate thread
 while True:
     if datetime.datetime.today().weekday() <= 4:
         fintech_fx()
-    time.sleep(interval)
+    time.sleep(interval + 5)
     
     
