@@ -7,7 +7,19 @@ import oandapyV20.endpoints.accounts as accounts
 from Credentials import *
 from prettytable import PrettyTable
 import oandapyV20.endpoints.transactions as trans
+import requests
+import json
 
+def fetch(MYSQL_QUERY):
+  MYSQL_CONNECTOR_URL = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech'  
+  payload = {
+      'statement': MYSQL_QUERY,
+      'type': 'query'
+  }
+  response = requests.post(MYSQL_CONNECTOR_URL, data=json.dumps(payload))
+  data = json.loads(response.json()['body'])
+  json_data = data['result']
+  return json_data
 
 accountID=oanda_acc_id
 token=oanda_token
@@ -23,6 +35,11 @@ def requestAccountSummary():
     r = api.request(r)
     return r
 
+def requestTransactions():
+     params ={"to": 2306,"from": 2304}
+
+     
+    r = trans.TransactionIDRange(accountID, params=params)
 def formatAccountSummary():
     rv = requestAccountSummary()
     NAV = rv["account"]["NAV"]
@@ -45,3 +62,4 @@ def formatTrades(rv):
     for trade in rv["trades"][:10]:
         s = s + trade["id"] + ": "  "Instrument: " +trade["instrument"] +  ", price: " + trade["price"] + ", P/L: " + trade["unrealizedPL"] + "\n"
     return s
+
