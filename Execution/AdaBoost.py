@@ -11,6 +11,7 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from pandas.api.types import is_numeric_dtype
 
 
 class AdaBoost:
