@@ -161,10 +161,10 @@ def fintech_fx():
         if ada_signal_value_diff/pip_ratio < currency_diff_threshold and ada_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
             if ada_prediction > 0:
                 ##Execute buy order
-                createBuyOrder(currency, purchase_units, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
+                createBuyOrder(currency, purchase_units - 1, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
             if ada_prediction < 0:
                 ##Execute sell order
-                createSellOrder(currency, purchase_units, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
+                createSellOrder(currency, purchase_units - 1, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
                 
 ##################End
     
