@@ -58,7 +58,7 @@ class AdaBoost:
         json_data = list(map(list, zip(*json_data))) ##Transpose matrix back
         df = pd.DataFrame(json_data)
         df.columns = json_data_columns
-        return df.fillna(df.mean())
+        return df.apply(lambda x: x.fillna(x.mean()) if is_numeric_dtype(x) else x.fillna(x.mode().iloc[0]))
 
     def universal_fetch(self):
         MYSQL_CONNECTOR_URL = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech'  
