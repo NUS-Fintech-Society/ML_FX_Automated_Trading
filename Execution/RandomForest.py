@@ -58,7 +58,7 @@ class RandomForest:
         json_data = list(map(list, zip(*json_data))) ##Transpose matrix back
         df = pd.DataFrame(json_data)
         df.columns = json_data_columns
-        return df.dropna()
+        return df.fillna(df.mean)
 
     def universal_fetch(self):
         MYSQL_CONNECTOR_URL = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech'  
