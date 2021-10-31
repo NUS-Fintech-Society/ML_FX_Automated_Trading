@@ -11,8 +11,9 @@ import json
 from threading import Thread
 import telebot
 from Credentials import *
-from RandomForest import *
-from AdaBoost import *
+from RandomForest import RandomForest
+from AdaBoost import AdaBoost
+from LogisticRegression import LogisticRegression_HA
 import schedule
 from Training_DF import get_df
 
@@ -47,7 +48,8 @@ currencyList =  ['GBP_JPY']
 
 ##############################Parameters################################
 currency_diff_threshold = 2 ##unit is pips
-accuracy_threshold = 0.90
+accuracy_threshold_ada = 0.90
+accuracy_threshold_rf = 0.80
 probability_threshold = 0.90
 purchase_units = 5000
 interval = 20 #in seconds
@@ -118,12 +120,15 @@ def upload_order(raw, oanda_order_id, instrument, units, take_profit, stop_loss,
 df = get_df()
 rf = RandomForest(df)
 ada = AdaBoost(df)
+lg_ha = LogisticRegression_HA(df)
 def model_trainer():
     global rf
     global ada
+    global lg_ha
     df = get_df()
     rf = RandomForest(df)
     ada = AdaBoost(df)
+    lg_ha = LogisticRegression_HA(df)
     
 def model_training_scheduler():
     schedule.every(interval).seconds.do(model_trainer)
@@ -147,7 +152,7 @@ def fintech_fx():
         rf_prediction_proba = rf_signal[2]
         model_accuracy = rf.accuracy
         print(rf_signal)
-        if rf_signal_value_diff/pip_ratio < currency_diff_threshold and rf_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
+        if rf_signal_value_diff/pip_ratio < currency_diff_threshold and rf_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_rf:
             if rf_prediction > 0:
                 ##Execute buy order
                 createBuyOrder(currency, purchase_units, 20, 20, "RandomForest_V1", currencyValue, pip_ratio)
@@ -161,14 +166,31 @@ def fintech_fx():
         ada_prediction_proba = ada_signal[2]
         model_accuracy = ada.accuracy
         print(ada_signal)
-        if ada_signal_value_diff/pip_ratio < currency_diff_threshold and ada_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
+        if ada_signal_value_diff/pip_ratio < currency_diff_threshold and ada_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_ada:
             if ada_prediction > 0:
                 ##Execute buy order
                 createBuyOrder(currency, purchase_units - 1, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
             if ada_prediction < 0:
                 ##Execute sell order
                 createSellOrder(currency, purchase_units - 1, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
-                
+        ###LG Regression
+        lg_ha_signal = lg_ha.produce_signal(currencyValue, currency)
+        lg_ha_signal_value_diff = lg_ha_signal[0]
+        lg_ha_prediction = lg_ha_signal[1]
+        lg_ha_prediction_proba = lg_ha_signal[2]
+        model_accuracy = lg_ha.accuracy
+        print(lg_ha_signal)
+        if lg_ha_signal_value_diff/pip_ratio < currency_diff_threshold and lg_ha_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_ada: ##Follow adaboost setting
+            if lg_ha_prediction > 0:
+                ##Execute buy order
+                createBuyOrder(currency, purchase_units + 1, 20, 20, "LogisticRegression_HA", currencyValue, pip_ratio)
+                pass
+            if lg_ha_prediction < 0:
+                ##Execute sell order
+                createSellOrder(currency, purchase_units + 1, 20, 20, "LogisticRegression_HA", currencyValue, pip_ratio)
+                pass
+            
+model_mapping = {4999: "RandomForest_V1", 5000: "AdaBoost_V1", 5001: "LogisticRegression_HA"}
 ##################End
     
 ###########Initialize variables.....###########
