@@ -42,8 +42,9 @@ def get_positive_correlation_query_oanda():
         price_ratio = gbpjpy_price / price
 
     body[f"{POSITIVE_CORRELATION[i]}"] = price_spread
-    body[f"{POSITIVE_CORRELATION[i]}_spread"] = price_spread
-    body[f"{POSITIVE_CORRELATION[i]}_ratio"] = price_ratio
+    body[f"{POSITIVE_CORRELATION[i]} spread"] = price_spread
+    body[f"{POSITIVE_CORRELATION[i]} ratio"] = price_ratio
+
     return body
 
 # calculate mid price from bid ask spread
@@ -107,10 +108,11 @@ def get_ivr_equity_query_volafy():
             body.update(iv_volafy("equity", ticker))
         except:
             pass
+
     return body
 
 # main function calling helper functions to scrape from the various sources
-def scrapper_hp():
+def scrape_main():
     body = {}
     value = {}
 
@@ -118,7 +120,10 @@ def scrapper_hp():
     value.update(get_ivr_equity_query_volafy())
  
     body["values"] = value
+
+    print(body)
+
     resp = requests.post(url, json = body)
 
-#positive_correlation_query_oanda()
-#scrape_main()
+# positive_correlation_query_oanda()
+# scrape_main()
