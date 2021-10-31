@@ -112,7 +112,7 @@ def get_ivr_equity_query_volafy():
     return body
 
 # main function calling helper functions to scrape from the various sources
-def scrape_main():
+def scrapper_hp():
     body = {}
     value = {}
 
