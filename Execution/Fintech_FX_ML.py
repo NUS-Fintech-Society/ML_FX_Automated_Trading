@@ -14,6 +14,7 @@ from Credentials import *
 from RandomForest import *
 from AdaBoost import *
 import schedule
+from Training_DF import get_df
 
 ############################Access MySQL Database#########################
 MYSQL_CONNECTOR_URL = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech'
@@ -114,13 +115,15 @@ def upload_order(raw, oanda_order_id, instrument, units, take_profit, stop_loss,
     query("update", statement)
     
 ###################Set up ML Models
-rf = RandomForest()
-ada = AdaBoost()
+df = get_df()
+rf = RandomForest(df)
+ada = AdaBoost(df)
 def model_trainer():
     global rf
     global ada
-    rf = RandomForest()
-    ada = AdaBoost()
+    df = get_df()
+    rf = RandomForest(df)
+    ada = AdaBoost(df)
     
 def model_training_scheduler():
     schedule.every(interval).seconds.do(model_trainer)
@@ -177,7 +180,7 @@ print("Launch Success!")
 
 Thread(target = model_training_scheduler).start()  ##Running model training on separate thread
 while True:
-    if datetime.datetime.today().weekday() <= 4:
+    if datetime.datetime.today().weekday() <= 7:
         fintech_fx()
     time.sleep(interval + 5)
     
