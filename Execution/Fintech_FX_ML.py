@@ -180,7 +180,7 @@ print("Launch Success!")
 
 Thread(target = model_training_scheduler).start()  ##Running model training on separate thread
 while True:
-    if datetime.datetime.today().weekday() <= 7:
+    if datetime.datetime.today().weekday() <= 4:
         fintech_fx()
     time.sleep(interval + 5)
     
