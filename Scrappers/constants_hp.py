@@ -16,4 +16,4 @@ VOLAFY_URL = "https://volafy.net/"
 
 POSITIVE_CORRELATION = ["AUD_USD", "NZD_USD"]
 
-IVR_LST = ["SPY", "QQQ", "IWY", "IWV",]
+IVR_LST = ["SPY", "QQQ", "IWY", "IWV"]
