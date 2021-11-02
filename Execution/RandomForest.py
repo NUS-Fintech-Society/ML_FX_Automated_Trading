@@ -37,6 +37,7 @@ class RandomForest(Model):
         rf.fit(X_train,y_train)
         rf_pred_class = rf.predict(X_test)
         accuracy = metrics.accuracy_score(y_test, rf_pred_class)
+        self.stdScaler = stdScaler
         self.accuracy = accuracy
         self.model = rf
         self.columns = x_df.columns.to_numpy()
@@ -44,14 +45,14 @@ class RandomForest(Model):
     def predict(self, x):
         prediction = self.model.predict(x)
         probability = self.model.predict_proba(x)
-        return prediction, probability
+        return list(self.model.predict(x))[0] , max(list(self.model.predict_proba(x)[0]))
 
     def produce_signal(self, currency_value, currency_name):
-        latest_values = self.universal_fetch()
-        target_currency_index = list(self.columns).index(currency_name)
-        currency_compare_value = latest_values[0][target_currency_index]
-        prediction = list(self.model.predict(latest_values))[0]
-        prediction_proba = max(list(self.model.predict_proba(latest_values)[0]))
+        latest_values = self.universal_fetch()      #Predict based on latest value
+        target_currency_index = list(self.columns).index(currency_name)                   #Get latest target value index
+        currency_compare_value = latest_values[0][target_currency_index]    #Get latest target value
+        latest_values = self.stdScaler.transform(self.make_df(latest_values, self.columns))             #Scaling the latest values
+        prediction, prediction_proba = self.predict(latest_values)
         return (currency_compare_value - currency_value), prediction, prediction_proba
         
 

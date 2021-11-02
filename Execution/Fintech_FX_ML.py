@@ -173,6 +173,7 @@ def fintech_fx():
             if ada_prediction < 0:
                 ##Execute sell order
                 createSellOrder(currency, purchase_units - 1, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
+        '''
         ###LG Regression
         lg_ha_signal = lg_ha.produce_signal(currencyValue, currency)
         lg_ha_signal_value_diff = lg_ha_signal[0]
@@ -189,7 +190,7 @@ def fintech_fx():
                 ##Execute sell order
                 createSellOrder(currency, purchase_units + 1, 20, 20, "LogisticRegression_HA", currencyValue, pip_ratio)
                 pass
-            
+            '''
 model_mapping = {4999: "RandomForest_V1", 5000: "AdaBoost_V1", 5001: "LogisticRegression_HA"}
 ##################End
     

@@ -9,6 +9,7 @@ class Model:
     accuracy = None
     columns = None
     df = None
+    stdScaler = None
     
     def __init__(self):
         pass
@@ -32,5 +33,7 @@ class Model:
         s = s[:-2]
         return "select " + s + " from dataframe order by timestamp desc limit 1"
 
-        
-
+    def make_df(self, latest_values, columns):
+        df = pd.DataFrame(latest_values)
+        df.columns = columns
+        return df
