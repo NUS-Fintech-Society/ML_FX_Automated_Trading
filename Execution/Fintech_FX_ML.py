@@ -48,8 +48,8 @@ currencyList =  ['GBP_JPY']
 
 ##############################Parameters################################
 currency_diff_threshold = 2 ##unit is pips
-accuracy_threshold_ada = 0.90
-accuracy_threshold_rf = 0.80
+accuracy_threshold_ada = 0.95
+accuracy_threshold_rf = 0.95
 probability_threshold = 0.90
 purchase_units = 5000
 interval = 20 #in seconds
