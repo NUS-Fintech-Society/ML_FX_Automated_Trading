@@ -1,4 +1,5 @@
 #!/usr/bin/python3.6
+from numpy.lib.function_base import bartlett
 from oandapyV20.contrib.requests import TakeProfitDetails, StopLossDetails
 from oandapyV20.contrib.requests import MarketOrderRequest
 import oandapyV20.endpoints.pricing as pricing
@@ -13,6 +14,7 @@ import telebot
 from Credentials import *
 from RandomForest import *
 from AdaBoost import *
+from Bagging import *
 import schedule
 
 ############################Access MySQL Database#########################
@@ -116,11 +118,14 @@ def upload_order(raw, oanda_order_id, instrument, units, take_profit, stop_loss,
 ###################Set up ML Models
 rf = RandomForest()
 ada = AdaBoost()
+bagging = Bagging()
 def model_trainer():
     global rf
     global ada
+    global bagging
     rf = RandomForest()
     ada = AdaBoost()
+    bagging = Bagging()
     
 def model_training_scheduler():
     schedule.every(interval).seconds.do(model_trainer)
@@ -152,19 +157,34 @@ def fintech_fx():
                 ##Execute sell order
                 createSellOrder(currency, purchase_units, 20, 20, "RandomForest_V1", currencyValue, pip_ratio)
         ###Ada boost
-        ada_signal = ada.produce_signal(currencyValue, currency)
-        ada_signal_value_diff = ada_signal[0]
-        ada_prediction = ada_signal[1]
-        ada_prediction_proba = ada_signal[2]
+        bagging_signal = ada.produce_signal(currencyValue, currency)
+        bagging_signal_value_diff = bagging_signal[0]
+        bagging_prediction = bagging_signal[1]
+        bagging_prediction_proba = bagging_signal[2]
         model_accuracy = ada.accuracy
-        print(ada_signal)
-        if ada_signal_value_diff/pip_ratio < currency_diff_threshold and ada_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
-            if ada_prediction > 0:
+        print(bagging_signal)
+        if bagging_signal_value_diff/pip_ratio < currency_diff_threshold and bagging_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
+            if bagging_prediction > 0:
                 ##Execute buy order
                 createBuyOrder(currency, purchase_units, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
-            if ada_prediction < 0:
+            if bagging_prediction < 0:
                 ##Execute sell order
                 createSellOrder(currency, purchase_units, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
+
+        ###Bagging
+        bagging_signal = bagging.produce_signal(currencyValue, currency)
+        bagging_signal_value_diff = bagging_signal[0]
+        bagging_prediction = bagging_signal[1]
+        bagging_prediction_proba = bagging_signal[2]
+        model_accuracy = bagging.accuracy
+        print(bagging_signal)
+        if bagging_signal_value_diff/pip_ratio < currency_diff_threshold and bagging_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold:
+            if bagging_prediction > 0:
+                ##Execute buy order
+                createBuyOrder(currency, purchase_units, 20, 20, "Bagging_V1", currencyValue, pip_ratio)
+            if bagging_prediction < 0:
+                ##Execute sell order
+                createSellOrder(currency, purchase_units, 20, 20, "Bagging_V1", currencyValue, pip_ratio)
                 
 ##################End
     
