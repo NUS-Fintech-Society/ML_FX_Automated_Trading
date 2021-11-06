@@ -42,8 +42,8 @@ def get_positive_correlation_query_oanda():
         price_ratio = gbpjpy_price / price
 
     body[f"{POSITIVE_CORRELATION[i]}"] = price_spread
-    body[f"{POSITIVE_CORRELATION[i]} spread"] = price_spread
-    body[f"{POSITIVE_CORRELATION[i]} ratio"] = price_ratio
+    body[f"{POSITIVE_CORRELATION[i]}_spread"] = price_spread
+    body[f"{POSITIVE_CORRELATION[i]}_ratio"] = price_ratio
 
     return body
 
@@ -120,8 +120,6 @@ def scrapper_hp():
     value.update(get_ivr_equity_query_volafy())
  
     body["values"] = value
-
     resp = requests.post(url, json = body)
-
 # positive_correlation_query_oanda()
 # scrape_main()
