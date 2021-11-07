@@ -23,6 +23,7 @@ def fetch(MYSQL_QUERY):
     json_data = list(map(list, zip(*json_data))) ##Transpose matrix back
     df = pd.DataFrame(json_data)
     df.columns = json_data_columns
+    df = df.dropna(axis=1, how='all') ##Drop columns with all NA values
     return df.apply(lambda x: 0 if x.isnull().all() else x.fillna(x.mean()) if is_numeric_dtype(x) else x.fillna(x.mode().iloc[0]))
 
 def calculate_label(arr, pip, pip_ratio):
