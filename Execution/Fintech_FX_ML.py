@@ -48,8 +48,8 @@ currencyList =  ['GBP_JPY']
 
 ##############################Parameters################################
 currency_diff_threshold = 2 ##unit is pips
-accuracy_threshold_ada = 0.95
-accuracy_threshold_rf = 0.95
+accuracy_threshold_ada = 0.90
+accuracy_threshold_rf = 0.90
 probability_threshold = 0.90
 purchase_units = 5000
 interval = 20 #in seconds
@@ -151,7 +151,7 @@ def fintech_fx():
         rf_prediction = rf_signal[1]
         rf_prediction_proba = rf_signal[2]
         model_accuracy = rf.accuracy
-        print(rf_signal)
+        print(rf_signal, rf.accuracy)
         if rf_signal_value_diff/pip_ratio < currency_diff_threshold and rf_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_rf:
             if rf_prediction > 0:
                 ##Execute buy order
@@ -165,7 +165,7 @@ def fintech_fx():
         ada_prediction = ada_signal[1]
         ada_prediction_proba = ada_signal[2]
         model_accuracy = ada.accuracy
-        print(ada_signal)
+        print(ada_signal,ada.accuracy)
         if ada_signal_value_diff/pip_ratio < currency_diff_threshold and ada_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_ada:
             if ada_prediction > 0:
                 ##Execute buy order
