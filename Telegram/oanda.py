@@ -36,10 +36,11 @@ def requestAccountSummary():
     return r
 
 def requestTransactions():
-     params ={"to": 2306,"from": 2304}
-
+  params ={"instrument": "GBP_JPY"}
+  r = trades.TradesList(accountID=accountID, params=params)
+  r = api.request(r)
+  return r
      
-    r = trans.TransactionIDRange(accountID, params=params)
 def formatAccountSummary():
     rv = requestAccountSummary()
     NAV = rv["account"]["NAV"]

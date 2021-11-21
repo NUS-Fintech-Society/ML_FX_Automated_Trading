@@ -43,6 +43,6 @@ def calculate_label(arr, pip, pip_ratio):
     result = result + [0] * (len(arr) - len(result))
     return result
 
-def get_df():
-    df = fetch('select * from (SELECT * FROM dataframe where dayofweek(timestamp) <= 5 order by timestamp desc limit 3000) as a order by a.timestamp')
+def get_df(size):
+    df = fetch('select * from (SELECT * FROM dataframe where dayofweek(timestamp) <= 5 order by timestamp desc limit %s) as a order by a.timestamp' % (str(size),))
     return df
