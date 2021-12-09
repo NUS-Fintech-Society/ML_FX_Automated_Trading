@@ -21,6 +21,7 @@ class Model:
           'type': 'query'
         }
         response = requests.post(MYSQL_CONNECTOR_URL, data=json.dumps(payload))
+        
         data = json.loads(response.json()['body'])
         json_data = data['result']
         json_data[0] = [0 if pd.isna(x)  else x for x in json_data[0]]
