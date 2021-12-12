@@ -13,6 +13,7 @@ import telebot
 from Credentials import *
 from RandomForest import RandomForest
 from AdaBoost import AdaBoost
+from Bagging import Bagging
 from RandomForestImb import RandomForestImb
 from LogisticRegression import LogisticRegression_HA
 import schedule
@@ -123,6 +124,8 @@ df2 = get_df(6000)
 df3 = get_df(4500)
 rf = RandomForest(df)
 ada = AdaBoost(df)
+bagging = Bagging(df)
+lg_ha = LogisticRegression_HA(df)
 rf2 = RandomForest(df2)
 rf3 = RandomForest(df3)
 ada2 = AdaBoost(df2)
@@ -133,6 +136,13 @@ def model_trainer():
     global rf2
     global rf3
     global ada
+    global bagging
+    global lg_ha
+    df = get_df()
+    rf = RandomForest(df)
+    ada = AdaBoost(df)
+    bagging = Bagging(df)
+    lg_ha = LogisticRegression_HA(df)
     global ada2
     global rfimb
     #global lg_ha
@@ -248,6 +258,23 @@ def fintech_fx():
                 createSellOrder(currency, purchase_units + 2, 20, 20, "RandomForest_V1", currencyValue, pip_ratio)
                 createSellOrder(currency, purchase_units + 2, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
         '''
+        ###Bagging boost
+        bagging_signal = bagging.produce_signal(currencyValue, currency)
+        bagging_signal_value_diff = bagging_signal[0]
+        bagging_prediction = bagging_signal[1]
+        bagging_prediction_proba = bagging_signal[2]
+        model_accuracy = bagging.accuracy
+        print(bagging_signal)
+        if bagging_signal_value_diff/pip_ratio < currency_diff_threshold and bagging_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_ada:
+            if bagging_prediction > 0:
+                ##Execute buy order
+                createBuyOrder(currency, purchase_units - 1, 20, 20, "BaggingBoost_V1", currencyValue, pip_ratio)
+            if bagging_prediction < 0:
+                ##Execute sell order
+                createSellOrder(currency, purchase_units - 1, 20, 20, "BaggingBoost_V1", currencyValue, pip_ratio)
+        '''
+        
+        '''
         ###LG Regression
         lg_ha_signal = lg_ha.produce_signal(currencyValue, currency)
         lg_ha_signal_value_diff = lg_ha_signal[0]
@@ -265,8 +292,7 @@ def fintech_fx():
                 createSellOrder(currency, purchase_units + 1, 20, 20, "LogisticRegression_HA", currencyValue, pip_ratio)
                 pass
             '''
-model_mapping = {5000: "RandomForest_V1", 4999: "AdaBoost_V1", 5001: "LogisticRegression_HA", 4998: "RandomForest_2", 4997: "AdaBoost2", 5002 : "RF_imb", 4995: "RF3"}
-##################End
+model_mapping = {5000: "RandomForest_V1", 4999: "AdaBoost_V1", 5001: "LogisticRegression_HA", 4998: "RandomForest_2", 4997: "AdaBoost2", 5002 : "RF_imb", 4995: "RF3",  5003: "Bagging_V1", 5002}
     
 ###########Initialize variables.....###########
 params ={"instruments": currencyConcate(currencyList)}
@@ -280,5 +306,4 @@ while True:
     if datetime.datetime.today().weekday() <= 7:
         fintech_fx()
     time.sleep(interval + 5)
-    
     
