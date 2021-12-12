@@ -134,8 +134,8 @@ rf3 = RandomForest(df3)
 ada = AdaBoost(df)
 ada2 = AdaBoost(df2)
 mlp = MLP(df)
-#bagging = Bagging(df)
-#lg_ha = LogisticRegression_HA(df)
+bagging = Bagging(df)
+lg_ha = LogisticRegression_HA(df)
 
 macd = MACD(df_mini)
 rsi = RSI(df_mini)
@@ -149,8 +149,8 @@ def model_trainer():
     global ada
     global ada2
     global mlp
-    #global bagging
-    #global lg_ha
+    global bagging
+    global lg_ha
     global macd
     global rsi
     global rfimb
@@ -159,8 +159,8 @@ def model_trainer():
     df2 = get_df(6000)
     df3 = get_df(4500)
 
-    #bagging = Bagging(df)
-    #lg_ha = LogisticRegression_HA(df)
+    bagging = Bagging(df)
+    lg_ha = LogisticRegression_HA(df)
 
     global rfimb
     #global lg_ha
@@ -276,6 +276,7 @@ def fintech_fx():
             if mlp_prediction < 0:
                 ##Execute sell order
                 createSellOrder(currency, purchase_units - 3, 20, 20, "AdaBoost_V2", currencyValue, pip_ratio)
+
         ###Random Forest Imb
         rf_signal = rfimb.produce_signal(currencyValue, currency)
         rf_signal_value_diff = rf_signal[0]
@@ -307,7 +308,7 @@ def fintech_fx():
                 createBuyOrder(currency, purchase_units + 5, 20, 20, "RSI_V1", currencyValue, pip_ratio)
             if rsi_signal == "Sell":
                 createSellOrder(currency, purchase_units + 5, 20, 20, "RSI_V1", currencyValue, pip_ratio)
-        '''
+        
         ###Bagging boost
         bagging_signal = bagging.produce_signal(currencyValue, currency)
         bagging_signal_value_diff = bagging_signal[0]
@@ -318,14 +319,12 @@ def fintech_fx():
         if bagging_signal_value_diff/pip_ratio < currency_diff_threshold and bagging_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_ada:
             if bagging_prediction > 0:
                 ##Execute buy order
-                createBuyOrder(currency, purchase_units - 1, 20, 20, "BaggingBoost_V1", currencyValue, pip_ratio)
+                createBuyOrder(currency, purchase_units + 6, 20, 20, "BaggingBoost_V1", currencyValue, pip_ratio)
             if bagging_prediction < 0:
                 ##Execute sell order
-                createSellOrder(currency, purchase_units - 1, 20, 20, "BaggingBoost_V1", currencyValue, pip_ratio)
-        '''
+                createSellOrder(currency, purchase_units + 6, 20, 20, "BaggingBoost_V1", currencyValue, pip_ratio)
         
-        '''
-        ###LG Regression
+        ##LG Regression
         lg_ha_signal = lg_ha.produce_signal(currencyValue, currency)
         lg_ha_signal_value_diff = lg_ha_signal[0]
         lg_ha_prediction = lg_ha_signal[1]
@@ -341,8 +340,8 @@ def fintech_fx():
                 ##Execute sell order
                 createSellOrder(currency, purchase_units + 1, 20, 20, "LogisticRegression_HA", currencyValue, pip_ratio)
                 pass
-            '''
-model_mapping = {5000: "RandomForest_V1", 4999: "AdaBoost_V1", 5001: "LogisticRegression_HA", 4998: "RandomForest_2", 4997: "AdaBoost2", 5002 : "RF_imb", 4995: "RF3",  5003: "Bagging_V1", 5004: "MACD", 5005: "RSI"}
+            
+model_mapping = {5000: "RandomForest_V1", 4999: "AdaBoost_V1", 5001: "LogisticRegression_HA", 4998: "RandomForest_2", 4997: "AdaBoost2", 5002 : "RF_imb", 4995: "RF3",  5003: "Bagging_V1", 5004: "MACD", 5005: "RSI", 5006: "Bagging Boost"}
     
 ###########Initialize variables.....###########
 params ={"instruments": currencyConcate(currencyList)}

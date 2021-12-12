@@ -12,10 +12,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import BaggingClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from pandas.api.types import is_numeric_dtype
 from Model import Model
 
+from Training_DF import get_df
 class Bagging(Model):
     
     def __init__(self, df):
@@ -34,7 +34,7 @@ class Bagging(Model):
         stdScaler = StandardScaler()
         X_train = stdScaler.fit_transform(X_train)
         X_test = stdScaler.transform(X_test)
-        bagging = BaggingClassifier(KNeighborsClassifier(), max_samples=0.5, max_features=0.5)(base_estimator = DecisionTreeClassifier(criterion = "entropy", max_depth = 4), n_estimators = 700, learning_rate = 0.2)
+        bagging = BaggingClassifier(max_samples=0.5, max_features=0.5, base_estimator = DecisionTreeClassifier(criterion = "entropy", max_depth = 4), n_estimators = 700)
         bagging.fit(X_train,y_train)
         bagging_pred_class = bagging.predict(X_test)
         accuracy = metrics.accuracy_score(y_test, bagging_pred_class)
