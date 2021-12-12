@@ -18,6 +18,9 @@ from RandomForestImb import RandomForestImb
 from LogisticRegression import LogisticRegression_HA
 import schedule
 from Training_DF import get_df
+from MACD_model import MACD
+from RSI_model import RSI
+from MLP import MLP
 
 ############################Access MySQL Database#########################
 MYSQL_CONNECTOR_URL = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech'
@@ -50,11 +53,11 @@ currencyList =  ['GBP_JPY']
 
 ##############################Parameters################################
 currency_diff_threshold = 2 ##unit is pips
-accuracy_threshold_ada = 0.90
-accuracy_threshold_rf = 0.90
-probability_threshold = 0.90
+accuracy_threshold_ada = 0.93
+accuracy_threshold_rf = 0.93
+probability_threshold = 0.93
 purchase_units = 5000
-interval = 20 #in seconds
+interval = 15 #in seconds
 #############################End of parameters#########################
 ##Note that the code in this file was written for multiple currency pairs as target. However, our ML model only use GBPJPY as target. 
 def get_pip_ratio(currency):
@@ -96,7 +99,6 @@ def createBuyOrder(instru, unit, tp, sl, model_name,currencyValue, pip_ratio): #
     o = order.OrderCreate(accountID, data)
     api.request(o)
     rsp = o.response
-    print(rsp)
     upload_order(str(rsp), rsp["orderCreateTransaction"]["id"], instru, unit, 20, 20, currencyValue, model_name)
 
 
@@ -119,44 +121,62 @@ def upload_order(raw, oanda_order_id, instrument, units, take_profit, stop_loss,
     query("update", statement)
     
 ###################Set up ML Models
+##Getting dataframe
+df_mini = get_df(100)
 df = get_df(3000)
 df2 = get_df(6000)
 df3 = get_df(4500)
+
+##Training models
 rf = RandomForest(df)
-ada = AdaBoost(df)
-bagging = Bagging(df)
-lg_ha = LogisticRegression_HA(df)
 rf2 = RandomForest(df2)
 rf3 = RandomForest(df3)
+ada = AdaBoost(df)
 ada2 = AdaBoost(df2)
+mlp = MLP(df)
+#bagging = Bagging(df)
+#lg_ha = LogisticRegression_HA(df)
+
+macd = MACD(df_mini)
+rsi = RSI(df_mini)
 rfimb = RandomForestImb(df2)
+
 #lg_ha = LogisticRegression_HA(df)
 def model_trainer():
     global rf
     global rf2
     global rf3
     global ada
-    global bagging
-    global lg_ha
-    df = get_df()
-    rf = RandomForest(df)
-    ada = AdaBoost(df)
-    bagging = Bagging(df)
-    lg_ha = LogisticRegression_HA(df)
     global ada2
+    global mlp
+    #global bagging
+    #global lg_ha
+    global macd
+    global rsi
+    global rfimb
+    df_mini = get_df(100)
+    df = get_df(3000)
+    df2 = get_df(6000)
+    df3 = get_df(4500)
+
+    #bagging = Bagging(df)
+    #lg_ha = LogisticRegression_HA(df)
+
     global rfimb
     #global lg_ha
-    df = get_df(3000)
     rf = RandomForest(df)
-    ada = AdaBoost(df)
-    df2 = get_df(6000)
     rf2 = RandomForest(df2)
-    ada2 = AdaBoost(df2)
-    rfimb = RandomForestImb(df2)
-    #lg_ha = LogisticRegression_HA(df)
-    df3 = get_df(4500)
     rf3 = RandomForest(df3)
-    
+    ada = AdaBoost(df)
+    ada2 = AdaBoost(df2)
+    mlp = MLP(df)
+
+    rf3 = RandomForest(df3)
+    macd = MACD(df_mini)
+    rsi = RSI(df_mini)
+    rfimb = RandomForestImb(df2)
+
+    #lg_ha = LogisticRegression_HA(df)
 def model_training_scheduler():
     schedule.every(interval).seconds.do(model_trainer)
     while True:
@@ -210,10 +230,10 @@ def fintech_fx():
         if rf_signal_value_diff/pip_ratio < currency_diff_threshold and rf_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_rf:
             if rf_prediction > 0:
                 ##Execute buy order
-                createBuyOrder(currency, purchase_units - 2, 20, 20, "RandomForest_V1", currencyValue, pip_ratio)
+                createBuyOrder(currency, purchase_units - 2, 20, 20, "RandomForest_V2", currencyValue, pip_ratio)
             if rf_prediction < 0:
                 ##Execute sell order
-                createSellOrder(currency, purchase_units - 2, 20, 20, "RandomForest_V1", currencyValue, pip_ratio)
+                createSellOrder(currency, purchase_units - 2, 20, 20, "RandomForest_V2", currencyValue, pip_ratio)
         ###Random Forest 3
         rf_signal = rf3.produce_signal(currencyValue, currency)
         rf_signal_value_diff = rf_signal[0]
@@ -238,10 +258,24 @@ def fintech_fx():
         if ada_signal_value_diff/pip_ratio < currency_diff_threshold and ada_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_ada:
             if ada_prediction > 0:
                 ##Execute buy order
-                createBuyOrder(currency, purchase_units - 3, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
+                createBuyOrder(currency, purchase_units - 3, 20, 20, "AdaBoost_V2", currencyValue, pip_ratio)
             if ada_prediction < 0:
                 ##Execute sell order
-                createSellOrder(currency, purchase_units - 3, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
+                createSellOrder(currency, purchase_units - 3, 20, 20, "AdaBoost_V2", currencyValue, pip_ratio)
+        ###MLP
+        mlp_signal = mlp.produce_signal(currencyValue, currency)
+        mlp_signal_value_diff = mlp_signal[0]
+        mlp_prediction = mlp_signal[1]
+        mlp_prediction_proba = mlp_signal[2]
+        model_accuracy = mlp.accuracy
+        print("MLP:", mlp_signal,model_accuracy)
+        if mlp_signal_value_diff/pip_ratio < currency_diff_threshold and mlp_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_ada:
+            if mlp_prediction > 0:
+                ##Execute buy order
+                createBuyOrder(currency, purchase_units - 3, 20, 20, "AdaBoost_V2", currencyValue, pip_ratio)
+            if mlp_prediction < 0:
+                ##Execute sell order
+                createSellOrder(currency, purchase_units - 3, 20, 20, "AdaBoost_V2", currencyValue, pip_ratio)
         ###Random Forest Imb
         rf_signal = rfimb.produce_signal(currencyValue, currency)
         rf_signal_value_diff = rf_signal[0]
@@ -252,11 +286,27 @@ def fintech_fx():
         if rf_signal_value_diff/pip_ratio < currency_diff_threshold and rf_prediction_proba > probability_threshold and model_accuracy > accuracy_threshold_rf:
             if rf_prediction > 0:
                 ##Execute buy order
-                createBuyOrder(currency, purchase_units, 20, 20, "RandomForest_V1", currencyValue, pip_ratio)
+                createBuyOrder(currency, purchase_units + 2, 20, 20, "RandomForest_V4", currencyValue, pip_ratio)
             if rf_prediction < 0:
                 ##Execute sell order
-                createSellOrder(currency, purchase_units + 2, 20, 20, "RandomForest_V1", currencyValue, pip_ratio)
-                createSellOrder(currency, purchase_units + 2, 20, 20, "AdaBoost_V1", currencyValue, pip_ratio)
+                createSellOrder(currency, purchase_units + 2, 20, 20, "RandomForest_V4", currencyValue, pip_ratio)
+                
+        ##########MACD
+        macd_signal = macd.produceSignal()
+        print(macd_signal)
+        if macd_signal != "Hold":
+            if macd_signal == "Buy":
+                createBuyOrder(currency, purchase_units + 4, 20, 20, "MACD_V1", currencyValue, pip_ratio)
+            if macd_signal == "Sell":
+                createSellOrder(currency, purchase_units + 4, 20, 20, "MACD_V1", currencyValue, pip_ratio)
+        ##RSI
+        rsi_signal = rsi.produceSignal()
+        print(rsi_signal)
+        if rsi_signal != "Hold":
+            if rsi_signal == "Buy":
+                createBuyOrder(currency, purchase_units + 5, 20, 20, "RSI_V1", currencyValue, pip_ratio)
+            if rsi_signal == "Sell":
+                createSellOrder(currency, purchase_units + 5, 20, 20, "RSI_V1", currencyValue, pip_ratio)
         '''
         ###Bagging boost
         bagging_signal = bagging.produce_signal(currencyValue, currency)
@@ -292,7 +342,7 @@ def fintech_fx():
                 createSellOrder(currency, purchase_units + 1, 20, 20, "LogisticRegression_HA", currencyValue, pip_ratio)
                 pass
             '''
-model_mapping = {5000: "RandomForest_V1", 4999: "AdaBoost_V1", 5001: "LogisticRegression_HA", 4998: "RandomForest_2", 4997: "AdaBoost2", 5002 : "RF_imb", 4995: "RF3",  5003: "Bagging_V1", 5002}
+model_mapping = {5000: "RandomForest_V1", 4999: "AdaBoost_V1", 5001: "LogisticRegression_HA", 4998: "RandomForest_2", 4997: "AdaBoost2", 5002 : "RF_imb", 4995: "RF3",  5003: "Bagging_V1", 5004: "MACD", 5005: "RSI"}
     
 ###########Initialize variables.....###########
 params ={"instruments": currencyConcate(currencyList)}
@@ -303,7 +353,11 @@ print("Launch Success!")
 
 Thread(target = model_training_scheduler).start()  ##Running model training on separate thread
 while True:
-    if datetime.datetime.today().weekday() <= 7:
-        fintech_fx()
-    time.sleep(interval + 5)
+    try:
+        if datetime.datetime.today().weekday() <= 5:
+            fintech_fx()
+        time.sleep(interval + 5)
+    except Exception as e:
+        print("There has been an error with this: " + str(e))
+        continue
     

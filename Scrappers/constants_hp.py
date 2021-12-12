@@ -1,3 +1,5 @@
+CHROME_HEADER = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36' #chrome
+
 CORRELATION_URL = "https://www.myfxbook.com/forex-market/correlation"
 
 ACCOUNT_ID = "101-003-9162148-001"

@@ -7,9 +7,11 @@ from bs4 import BeautifulSoup
 import urllib.request as rq
 import requests
 import datetime
+from requests.api import head
+from requests.sessions import Request
 from oandapyV20 import API
 import oandapyV20.endpoints.pricing as pricing
-from constants_hp import POSITIVE_CORRELATION, YAHOO_OPTION, YAHOO_STOCK, EPOCH_WEEK, VOLAFY_URL, IVR_LST, ACCOUNT_ID
+from constants_hp import CHROME_HEADER, POSITIVE_CORRELATION, YAHOO_OPTION, YAHOO_STOCK, EPOCH_WEEK, VOLAFY_URL, IVR_LST, ACCOUNT_ID
 
 
 url = 'https://e6hx5erhc6.execute-api.ap-southeast-1.amazonaws.com/Fintech/fintech_data_pipe'
@@ -83,8 +85,11 @@ def coming_friday_epoch():
 # type: equity or future(commodities and FX index)
 def iv_volafy(type, ticker):
     url = f"{VOLAFY_URL}{type}/{ticker}"
-    request = rq.urlopen(url)
-    soup = BeautifulSoup(request.read(), 'html.parser')
+    headers = {'User-Agent': CHROME_HEADER}
+    response = requests.get(url, headers=headers)
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
 
     tr_ivr = float(soup.find(text="Implied Volatility Percentile (IVP) 1y") \
         .find_parent('tr').find('td').find('div').get_text())
@@ -94,7 +99,6 @@ def iv_volafy(type, ticker):
 
     tr_hv = float(soup.find(text="Implied Volatility (IV) 30d") \
         .find_parent('tr').find('td').find('div').get_text())    
-
 
     return {
         f"{ticker}_ivr" : tr_ivr
@@ -106,8 +110,8 @@ def get_ivr_equity_query_volafy():
     for ticker in IVR_LST:
         try:
             body.update(iv_volafy("equity", ticker))
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     return body
 
