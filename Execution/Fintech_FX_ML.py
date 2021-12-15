@@ -341,7 +341,7 @@ def fintech_fx():
                 createSellOrder(currency, purchase_units + 1, 20, 20, "LogisticRegression_HA", currencyValue, pip_ratio)
                 pass
             
-model_mapping = {5000: "RandomForest_V1", 4999: "AdaBoost_V1", 5001: "LogisticRegression_HA", 4998: "RandomForest_2", 4997: "AdaBoost2", 5002 : "RF_imb", 4995: "RF3",  5003: "Bagging_V1", 5004: "MACD", 5005: "RSI", 5006: "Bagging Boost"}
+model_mapping = {5000: "RandomForest_V1", 4999: "AdaBoost_V1", 5001: "LogisticRegression_HA", 4998: "RandomForest_2", 4997: "AdaBoost2", 5002 : "RF_imb", 4995: "RandomForest_2",  5003: "Bagging_V1", 5004: "MACD", 5005: "RSI", 5006: "Bagging Boost"}
     
 ###########Initialize variables.....###########
 params ={"instruments": currencyConcate(currencyList)}
